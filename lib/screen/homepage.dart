@@ -8,6 +8,7 @@ class HomePage extends StatefulWidget {
 }
 
 bool _isEdit = false;
+List<String> _selectedID = [];
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -15,13 +16,16 @@ class _HomePageState extends State<HomePage> {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-        
-          child: Icon(Icons.add_ic_call_sharp,size: 40,),
+          child: Icon(
+            Icons.add_ic_call_sharp,
+            size: 40,
+          ),
           backgroundColor: Colors.green[400],
           tooltip: 'បន្ថែមទូរស័ព្ទ?',
-          onPressed: (){
+          onPressed: () {
             setState(() {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AddProduct()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddProduct()));
             });
           },
         ),
@@ -30,22 +34,14 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.orange,
           centerTitle: true,
           title: Text("TestFirebase"),
-          leading: _isEdit
-              ? IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    setState(() {
-                      _isEdit = !_isEdit;
-                    });
-                  },
-                )
-              : null,
           actions: [
             _isEdit
-                ? IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {},
-                  )
+                ? !(_selectedID.length > 1)
+                    ? IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {},
+                      )
+                    : Container()
                 : Container(),
             _isEdit
                 ? IconButton(
@@ -54,6 +50,18 @@ class _HomePageState extends State<HomePage> {
                   )
                 : Container(),
           ],
+          leading: _isEdit
+              ? IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      _isEdit = false;
+                      _selectedID = [];
+                    });
+                    print('isEdit: $_isEdit');
+                  },
+                )
+              : null,
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('mobile').snapshots(),
@@ -70,20 +78,50 @@ class _HomePageState extends State<HomePage> {
               return ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (BuildContext context, int index) {
+                  String idDoc = snapshot.data.docs[index].id;
                   return Column(
                     children: [
                       ListTile(
                         leading: _isEdit
-                            ? Icon(Icons.check_circle, color: Colors.green)
-                            : _isEdit
-                                ? Icon(Icons.circle, color: Colors.white)
-                                : null,
+                            ? _selectedID.contains(idDoc)
+                                ? Icon(Icons.check_circle, color: Colors.green)
+                                : Icon(Icons.circle, color: Colors.grey)
+                            : null,
                         onLongPress: () {
-                          setState(() {
-                            _isEdit = !_isEdit;
-                          });
-                          var id = snapshot.data.docs[index].id;
-                          print('key: $id');
+                          if (_selectedID.contains(idDoc)) {
+                            print('selectedID: $_selectedID');
+                          } else {
+                            setState(() {
+                              _isEdit = true;
+                              _selectedID.add(idDoc);
+                            });
+                          }
+
+                          print('isEdit: $_isEdit');
+                          print('selectedID: $_selectedID');
+                        },
+                        onTap: () {
+                          if (_isEdit == false) {
+                            print('selectedID: $_selectedID');
+                          } else {
+                            if (_selectedID.contains(idDoc)) {
+                              setState(() {
+                                _selectedID.remove(idDoc);
+                                print('selectedID: $_selectedID');
+                                if (_selectedID.length < 1) {
+                                  _isEdit = false;
+                                } else {
+                                  _selectedID.remove(idDoc);
+                                }
+                              });
+                            } else {
+                              setState(() {
+                                _selectedID.add(idDoc);
+                              });
+                            }
+                          }
+
+                          print('selectedID: $_selectedID');
                         },
                         title: Text(_doc[index]['model']),
                         trailing: Text(
