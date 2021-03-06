@@ -2,6 +2,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/screen/homepage.dart';
+import 'package:mobile/screen/test.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +35,7 @@ class _MyHomeState extends State<MyHome> {
         }
         else if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-            body: HomePage(),
+            body: TestFirestore(),
           );
         }
         return Center(child: CircularProgressIndicator());
