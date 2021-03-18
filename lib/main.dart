@@ -35,7 +35,7 @@ class _MyHomeState extends State<MyHome> {
         }
         else if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-            body: TestFirestore(),
+            body: HomePage(),
           );
         }
         return Center(child: CircularProgressIndicator());

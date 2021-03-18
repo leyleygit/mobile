@@ -9,18 +9,28 @@ class HomePage extends StatefulWidget {
 
 bool _isEdit = false;
 List<String> _selectedID = [];
+CollectionReference colRe = FirebaseFirestore.instance.collection('mobile');
 
 class _HomePageState extends State<HomePage> {
+  _handelRemove() {
+    _selectedID.forEach((val) {
+      colRe.doc(val).delete();
+    });
+    setState(() {
+      _isEdit = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(
-            Icons.add_ic_call_sharp,
+            Icons.add,
             size: 40,
           ),
-          backgroundColor: Colors.green[400],
+          backgroundColor: Colors.orange[400],
           tooltip: 'បន្ថែមទូរស័ព្ទ?',
           onPressed: () {
             setState(() {
@@ -33,20 +43,29 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.orange,
           centerTitle: true,
-          title: Text("TestFirebase"),
+          title: Text("HomePage"),
           actions: [
             _isEdit
                 ? !(_selectedID.length > 1)
                     ? IconButton(
                         icon: Icon(Icons.edit),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (contex) {
+                            return AddProduct(
+                              docID: _selectedID[0],
+                            );
+                          }));
+                        },
                       )
                     : Container()
                 : Container(),
             _isEdit
                 ? IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () {},
+                    onPressed: () {
+                      _handelRemove();
+                    },
                   )
                 : Container(),
           ],
@@ -58,6 +77,7 @@ class _HomePageState extends State<HomePage> {
                       _isEdit = false;
                       _selectedID = [];
                     });
+
                     print('isEdit: $_isEdit');
                   },
                 )
@@ -125,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         title: Text(_doc[index]['model']),
                         trailing: Text(
-                          _doc[index]['price'],
+                          '${_doc[index]['price']} \$',
                           style: TextStyle(
                             color: Colors.green[600],
                             fontSize: 17,
