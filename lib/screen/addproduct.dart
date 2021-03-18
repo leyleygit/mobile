@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_float_action_button/animated_floating_action_button.dart';
 import 'package:mobile/screen/homepage.dart';
-//fdsjfdsjlkfjdslkfjdlkjsf
+
 class AddProduct extends StatefulWidget {
   final String docID;
   const AddProduct({Key key, this.docID}) : super(key: key);
