@@ -60,6 +60,7 @@ class _AddProductState extends State<AddProduct> {
       text: 'Take Picture',
     );
   }
+
   @override
   void initState() {
     super.initState();
@@ -106,7 +107,7 @@ class _AddProductState extends State<AddProduct> {
               if (currentState.validate()) {
                 setState(() {
                   isValidate = true;
-                }); 
+                });
               } else {
                 setState(() {
                   isValidate = false;
@@ -186,9 +187,29 @@ class _AddProductState extends State<AddProduct> {
                   OutlineButton(
                     onPressed: !isValidate
                         ? null
-                        : widget.docID != null ? _updateDoc() : _addDoc(),
+                        : widget.docID != null
+                            ? _updateDoc
+                            : _addDoc,
+                    //========================
+                    // onPressed:  isValidate?(){
+                    //   if(isValidate==false){
+                    //     return null;
+                    //   }else if(isValidate==true){
+                    //     if(widget.docID!=null){
+                    //       _updateDoc();
+                    //     }else{
+                    //       _addDoc();
+                    //     }
+                    //   }
+                    // }:null,
+                    //======================================================
+                    // !isValidate
+                    //     ? null
+                    //     : widget.docID != null ? _updateDoc : _addDoc,
                     color: Colors.red,
-                    child:widget.docID!=null?Text('Save product'): Text('Add Product'),
+                    child: widget.docID != null
+                        ? Text('Save product')
+                        : Text('Add Product'),
                     highlightedBorderColor: Colors.cyanAccent,
                     splashColor: Colors.red,
                     borderSide: BorderSide(
