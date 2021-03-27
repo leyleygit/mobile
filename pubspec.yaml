@@ -34,7 +34,6 @@ dependencies:
   image_picker: ^0.6.7+22
   firebase_storage: ^7.0.0
   animated_float_action_button: ^1.0.3
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_float_action_button/animated_floating_action_button.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile/screen/homepage.dart';
 
 class AddProduct extends StatefulWidget {
@@ -60,7 +63,19 @@ class _AddProductState extends State<AddProduct> {
       text: 'Take Picture',
     );
   }
-
+  File _image;
+  final picker = ImagePicker();
+  Future getImage(ImageSource source) async {
+    final pickerFile = await picker.getImage(source: source);
+    setState(() {
+      if(pickerFile != null){
+        _image = File(pickerFile.path);
+      }
+      else{
+        print('No Image Selected');
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
